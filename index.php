@@ -97,48 +97,52 @@ switch ($method) {
         }
         break;
 
-    // case 'PATCH':
-    //     // **Editar un producto (actualización parcial)**
-    //     $data = json_decode(file_get_contents("php://input"));
+    case 'PATCH':
+        // Editar 
+        $data = json_decode(file_get_contents("php://input"));
 
-    //     if (!$productId || empty((array)$data)) {
-    //         http_response_code(400);
-    //         echo json_encode(["mensaje" => "ID o datos para actualizar no proporcionados."]);
-    //         break;
-    //     }
+        if (!$productId || empty((array)$data)) {
+            http_response_code(400);
+            echo json_encode(["mensaje" => "ID o datos para actualizar no proporcionados."]);
+            break;
+        }
 
-    //     $fields = [];
-    //     if (!empty($data->nombre)) $fields['nombre'] = htmlspecialchars(strip_tags($data->nombre));
-    //     if (!empty($data->descripcion)) $fields['descripcion'] = htmlspecialchars(strip_tags($data->descripcion));
+        // Array asociativo con los datos proporcionados para la edición del producto 
+        $fields = [];
+        if (!empty($data->nombre)) $fields['nombre'] = htmlspecialchars(strip_tags($data->nombre));
+        if (!empty($data->descripcion)) $fields['descripcion'] = htmlspecialchars(strip_tags($data->descripcion));
 
-    //     if (empty($fields)) {
-    //         http_response_code(400);
-    //         echo json_encode(["mensaje" => "Ningún campo válido para actualizar."]);
-    //         break;
-    //     }
+        if (empty($fields)) {
+            http_response_code(400);
+            echo json_encode(["mensaje" => "Ningún campo válido para actualizar."]);
+            break;
+        }
 
-    //     $set_clause = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($fields)));
-    //     $query = "UPDATE productos SET $set_clause WHERE id = :id";
+        $set_clause = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($fields)));
+        $query = "UPDATE productos SET $set_clause WHERE id = :id";
         
-    //     $stmt = $pdo->prepare($query);
-    //     $stmt->bindParam(':id', $productId);
-    //     foreach ($fields as $key => &$value) { // Pasamos por referencia para bindParam
-    //         $stmt->bindParam(":$key", $value);
-    //     }
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':id', $productId);
+    
+        foreach ($fields as $key => &$value) { 
+            // Pasamos por referencia para bindParam
+            $stmt->bindParam(":$key", $value);
+        }
 
-    //     if ($stmt->execute()) {
-    //         if ($stmt->rowCount() > 0) {
-    //             http_response_code(200);
-    //             echo json_encode(["mensaje" => "Producto actualizado."]);
-    //         } else {
-    //             http_response_code(404); // Puede que el producto no exista o los datos sean los mismos
-    //             echo json_encode(["mensaje" => "Producto no encontrado o sin cambios."]);
-    //         }
-    //     } else {
-    //         http_response_code(503);
-    //         echo json_encode(["mensaje" => "No se pudo actualizar el producto."]);
-    //     }
-    //     break;
+        if ($stmt->execute()) {
+            if ($stmt->rowCount() > 0) {
+                http_response_code(200);
+                echo json_encode(["mensaje" => "Producto actualizado."]);
+            } else {
+                http_response_code(404); 
+                // Puede que el producto no exista o los datos sean los mismos
+                echo json_encode(["mensaje" => "Producto no encontrado o sin cambios."]);
+            }
+        } else {
+            http_response_code(503);
+            echo json_encode(["mensaje" => "No se pudo actualizar el producto."]);
+        }
+        break;
 
     default:
         // Método no soportado
