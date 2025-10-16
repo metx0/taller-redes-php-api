@@ -44,10 +44,23 @@ $productId = isset($uri[2]) && is_numeric($uri[2]) ? (int)$uri[2] : null;
 
 // Ejecutamos las queries correspondientes al método HTTP (POST, PATCH, DELETE)
 switch ($method) {
-    // Retornar la lista de productos 
     case 'GET':
+        // Retornar la lista de productos 
+        
+        $query = "SELECT * FROM productos";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
 
+        if ($stmt->rowCount() > 0) {
+            $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            http_response_code(200); 
+            echo json_encode(["productos" => $productos]);
+        } else {
+            http_response_code(404); 
+            echo json_encode(["mensaje" => "No se encontraron productos."]);
+        }
         break;
+
     case 'POST':
         // Crear un nuevo producto 
 
