@@ -68,31 +68,34 @@ switch ($method) {
         }
         break;
 
-    // case 'DELETE':
-    //     // **Eliminar un producto**
-    //     if (!$productId) {
-    //         http_response_code(400);
-    //         echo json_encode(["mensaje" => "ID de producto no proporcionado."]);
-    //         break;
-    //     }
+    case 'DELETE':
+        // Eliminar producto
+        if (!$productId) {
+            // Bad request 
+            http_response_code(400);
+            echo json_encode(["mensaje" => "ID de producto no proporcionado"]);
+            break;
+        }
 
-    //     $query = "DELETE FROM productos WHERE id = :id";
-    //     $stmt = $pdo->prepare($query);
-    //     $stmt->bindParam(':id', $productId);
+        $query = "DELETE FROM productos WHERE id = :id";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':id', $productId);
 
-    //     if ($stmt->execute()) {
-    //         if ($stmt->rowCount() > 0) {
-    //             http_response_code(200); // OK
-    //             echo json_encode(["mensaje" => "Producto eliminado."]);
-    //         } else {
-    //             http_response_code(404); // Not Found
-    //             echo json_encode(["mensaje" => "Producto no encontrado."]);
-    //         }
-    //     } else {
-    //         http_response_code(503);
-    //         echo json_encode(["mensaje" => "No se pudo eliminar el producto."]);
-    //     }
-    //     break;
+        if ($stmt->execute()) {
+            if ($stmt->rowCount() > 0) {
+                http_response_code(200); 
+                echo json_encode(["mensaje" => "Producto eliminado."]);
+            } else {
+                // Producto no encontrado 
+                http_response_code(404); 
+                echo json_encode(["mensaje" => "Producto no encontrado."]);
+            }
+        } else {
+            // Error del servidor 
+            http_response_code(503);
+            echo json_encode(["mensaje" => "No se pudo eliminar el producto."]);
+        }
+        break;
 
     // case 'PATCH':
     //     // **Editar un producto (actualización parcial)**
@@ -137,10 +140,10 @@ switch ($method) {
     //     }
     //     break;
 
-    // default:
-    //     // Método no soportado
-    //     http_response_code(405); // Method Not Allowed
-    //     echo json_encode(["mensaje" => "Método no soportado."]);
-    //     break;
+    default:
+        // Método no soportado
+        http_response_code(405); // Method Not Allowed
+        echo json_encode(["mensaje" => "Método no soportado."]);
+        break;
 }
 ?>
