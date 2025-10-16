@@ -7,6 +7,12 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
+// Manejar la petición pre-vuelo (preflight) de OPTIONS
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit(); // Termina el script aquí, no es necesario procesar más.
+}
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -38,6 +44,10 @@ $productId = isset($uri[2]) && is_numeric($uri[2]) ? (int)$uri[2] : null;
 
 // Ejecutamos las queries correspondientes al método HTTP (POST, PATCH, DELETE)
 switch ($method) {
+    // Retornar la lista de productos 
+    case 'GET':
+
+        break;
     case 'POST':
         // Crear un nuevo producto 
 
