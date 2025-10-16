@@ -10,7 +10,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 // Manejar la petición pre-vuelo (preflight) de OPTIONS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
-    exit(); // Termina el script aquí, no es necesario procesar más.
+    exit(); 
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -46,7 +46,7 @@ $productId = isset($uri[2]) && is_numeric($uri[2]) ? (int)$uri[2] : null;
 switch ($method) {
     case 'GET':
         // Retornar la lista de productos 
-        
+
         $query = "SELECT * FROM productos";
         $stmt = $pdo->prepare($query);
         $stmt->execute();
