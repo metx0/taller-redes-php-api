@@ -5,6 +5,8 @@
 // Encabezados para permitir CORS y definir el tipo de contenido como JSON
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: POST, DELETE, PATCH, OPTIONS");
+header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 // Manejar la petición pre-vuelo (preflight) de OPTIONS
